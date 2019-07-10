@@ -35,6 +35,8 @@ import edu.umd.cs.findbugs.ba.generic.GenericObjectType;
 import edu.umd.cs.findbugs.ba.generic.GenericSignatureParser;
 import edu.umd.cs.findbugs.ba.generic.GenericUtilities;
 
+import java.io.InputStream;
+
 /**
  * Created by plamen5kov on 6/17/16.
  */
@@ -274,6 +276,7 @@ public class DtsApi {
             }
             String classSuffix = "<" + String.join(",", arguments) + ">";
 
+            //todo supprimé ???
             System.out.println(String.format("Appending %s to occurrences of class %s without passed generic types", classSuffix, className));
 
             String replaceString = String.format("$1%s%s$2", className, classSuffix);
@@ -590,6 +593,8 @@ public class DtsApi {
         for (String intface : interfaceNames) {
             JavaClass clazz1 = ClassRepo.findClass(intface);
 
+
+            //todo supprimé ???
             // Added guard to prevent NullPointerExceptions in case libs are not provided - the dev can choose to include it and rerun the generator
             if (clazz1 == null) {
                 System.out.println("ignoring definitions in missing dependency: " + intface);
@@ -1272,4 +1277,49 @@ public class DtsApi {
         }
         return false;
     }
+
+
+    public ArrayList<TypeDef> generateTypeDefComment(List<JavaClass> javaClasses, String dtsFIleName) {
+        ArrayList<TypeDef> listTypeDef = new ArrayList<>();
+        for (int i = 0; i < javaClasses.size(); i++) {
+            JavaClass myClass = javaClasses.get(i);
+            String fullName = getFullPath(myClass);
+
+            StringBuilder2 sb2 = new StringBuilder2();
+            sb2.appendln("/**");
+            sb2.appendln(String.format(" * @typedef { import('./%s').%s } %s", dtsFIleName, fullName, fullName));
+            sb2.append("**/");
+
+            listTypeDef.add(
+                    new TypeDef(fullName, sb2.toString())
+            );
+        }
+        return listTypeDef;
+    }
+
+
+    private String getFullPath(JavaClass javaClass) {
+        return javaClass.getClassName().replace('$', '.');
+    }
+
+
+    public class  TypeDef {
+        private String fullName;
+        private String content;
+
+        public TypeDef(String fullName, String content) {
+            this.fullName = fullName;
+            this.content = content;
+        }
+
+        public String getFullName() {
+            return fullName;
+        }
+
+        public String getContent() {
+            return content;
+        }
+    }
+
+
 }

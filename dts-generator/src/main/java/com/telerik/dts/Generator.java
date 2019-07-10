@@ -52,11 +52,21 @@ public class Generator {
             this.fileHelper.writeToFile(String.format("/// <reference path=\"%s\"/>\n", this.declarationsFileName), this.outFileName, false);
         }
 
+        String outFileNameNoExtension = this.outFileName.replace(".d.ts", "");
         while (ClassRepo.hasNext()) {
             List<JavaClass> classFiles = ClassRepo.getNextClassGroup();
             String generatedContent = this.dtsApi.generateDtsContent(classFiles);
+            ArrayList<DtsApi.TypeDef> typedefContent = this.dtsApi.generateTypeDefComment(classFiles, outFileNameNoExtension);
 
             this.fileHelper.writeToFile(generatedContent, this.outFileName, true);
+
+
+            for (DtsApi.TypeDef typeDef : typedefContent) {
+                this.fileHelper.writeToFile(typeDef.getContent(), typeDef.getFullName() + ".js", true);
+            }
+
+
+
         }
 
         String content = this.fileHelper.readFileContent(this.outFileName);

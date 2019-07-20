@@ -10,4 +10,4 @@ RUN ./gradlew jar
 
 
 ENTRYPOINT [ "java", "-jar", "build/libs/dts-generator.jar" ]
-CMD ["-input", "/usr/src/jarFolder", "-output", "/usr/src/jarFolder/dts"]b
+CMD ["-input", "/usr/src/jarFolder", "-output", "/usr/src/jarFolder/dts"]

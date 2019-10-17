@@ -5,7 +5,7 @@ Fork of [android-dts-generator](https://github.com/NativeScript/android-dts-gene
 ## Linux (Ubuntu)
 Create a directory with some Jar file inside. 
 ```Shell
-mkdir ~/jarFoldera
+mkdir ~/jarFolder
 # !!!!!!!!!!! COPY SOME Jar FILES INSIDE !!!!!!! 
 ```
 
